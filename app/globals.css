@@ -108,11 +108,52 @@ a {
   margin: 0 auto;
 }
 
-.section-title {
-  font-size: 2.2rem;
-  font-weight: 700;
+/* Section Header & Filters */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
   letter-spacing: -0.5px;
+  margin-bottom: 0;
+}
+
+.category-filters {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  border-radius: 30px;
+  border: 1px solid var(--glass-border);
+}
+
+.filter-btn {
+  padding: 8px 20px;
+  border-radius: 25px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  color: white;
+}
+
+.filter-btn.active {
+  background: linear-gradient(to right, #90cea1, #01b4e4);
+  color: #032541;
+  box-shadow: 0 4px 12px rgba(1, 180, 228, 0.3);
 }
 
 .movie-grid {
@@ -290,14 +331,56 @@ a {
   font-size: 0.85rem;
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Skeleton Loading */
+.skeleton-card {
+  aspect-ratio: 2/3;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #0d253f 25%, #1a3a5a 50%, #0d253f 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.8s ease forwards;
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.load-more-btn {
+  padding: 12px 40px;
+  border-radius: 30px;
+  border: none;
+  background: var(--primary);
+  color: #032541;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(1, 180, 228, 0.4);
+}
+
+.load-more-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+  box-shadow: 0 8px 25px rgba(1, 180, 228, 0.5);
+}
+
+.load-more-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Responsive */
