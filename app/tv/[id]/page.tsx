@@ -7,6 +7,8 @@ export default function TVDetailPage({ params }: { params: Promise<{ id: string 
   const { id } = use(params);
   const [show, setShow] = useState<any>(null);
   const [credits, setCredits] = useState<any>(null);
+  const [trailer, setTrailer] = useState<string | null>(null);
+  const [showTrailer, setShowTrailer] = useState(false);
   const [loading, setLoading] = useState(true);
   
   const API_KEY = "233f3a5d8f8cb3c344512e12e10a9be0";
@@ -14,16 +16,25 @@ export default function TVDetailPage({ params }: { params: Promise<{ id: string 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const [showRes, creditsRes] = await Promise.all([
+        const [showRes, creditsRes, videosRes] = await Promise.all([
           fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${API_KEY}&language=en-US`),
-          fetch(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=${API_KEY}&language=en-US`)
+          fetch(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=${API_KEY}&language=en-US`),
+          fetch(`https://api.themoviedb.org/3/tv/${id}/videos?api_key=${API_KEY}&language=en-US`)
         ]);
         
         const showData = await showRes.json();
         const creditsData = await creditsRes.json();
+        const videosData = await videosRes.json();
         
         setShow(showData);
         setCredits(creditsData);
+
+        // Find the official trailer
+        const officialTrailer = videosData.results?.find(
+          (vid: any) => vid.type === "Trailer" && vid.site === "YouTube"
+        );
+        setTrailer(officialTrailer ? officialTrailer.key : null);
+
       } catch (error) {
         console.error("Error details:", error);
       } finally {
@@ -42,6 +53,23 @@ export default function TVDetailPage({ params }: { params: Promise<{ id: string 
   return (
     <div className="min-h-screen">
       <Header onSearch={() => {}} />
+
+      {showTrailer && trailer && (
+        <div className="trailer-modal" onClick={() => setShowTrailer(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <button className="close-modal" onClick={() => setShowTrailer(false)}>×</button>
+            <iframe 
+              width="100%" 
+              height="100%" 
+              src={`https://www.youtube.com/embed/${trailer}?autoplay=1`} 
+              title="TV Show Trailer" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      )}
       
       <div className="detail-hero" style={{ backgroundImage: `linear-gradient(to right, rgba(3, 37, 65, 1) 150px, rgba(3, 37, 65, 0.84) 100%), url(${backdropUrl})` }}>
         <div className="detail-container">
@@ -68,7 +96,11 @@ export default function TVDetailPage({ params }: { params: Promise<{ id: string 
                 </div>
                 <span className="rating-label">User<br/>Score</span>
               </div>
-              <button className="play-trailer">▶ Play Trailer</button>
+              {trailer && (
+                <button className="play-trailer" onClick={() => setShowTrailer(true)}>
+                  ▶ Play Trailer
+                </button>
+              )}
             </div>
 
             <div className="tagline"><i>{show.tagline}</i></div>
@@ -200,6 +232,40 @@ export default function TVDetailPage({ params }: { params: Promise<{ id: string 
         }
         .cast-name { font-weight: 700; font-size: 0.85rem; margin: 0; }
         .cast-role { font-size: 0.75rem; opacity: 0.7; margin: 0; }
+        
+        .trailer-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.9);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 2000;
+          padding: 20px;
+        }
+        .modal-content {
+          width: 100%;
+          max-width: 1000px;
+          aspect-ratio: 16/9;
+          position: relative;
+          background: black;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+        .close-modal {
+          position: absolute;
+          top: -40px;
+          right: 0;
+          background: transparent;
+          border: none;
+          color: white;
+          font-size: 2rem;
+          cursor: pointer;
+        }
+
         .loading-screen, .error-screen {
           height: 100vh;
           display: flex;
