@@ -121,12 +121,14 @@ export default function Home() {
               {movies.length > 0 ? (
                 movies.map((movie, index) => (
                   <MovieCard
-                    key={`${movie.id}-${index}`}
-                    title={movie.title || movie.name}
-                    posterPath={movie.poster_path}
-                    rating={movie.vote_average}
-                    releaseDate={movie.release_date || movie.first_air_date}
-                  />
+                  key={`${movie.id}-${index}`}
+                  id={movie.id}
+                  title={movie.title || movie.name}
+                  posterPath={movie.poster_path}
+                  rating={movie.vote_average}
+                  releaseDate={movie.release_date || movie.first_air_date}
+                  type={movie.media_type || 'movie'}
+                />
                 ))
               ) : (
                 <p className="no-results">No movies found. Try another search.</p>

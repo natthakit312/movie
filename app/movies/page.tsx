@@ -99,10 +99,12 @@ export default function MoviesPage() {
               {movies.map((movie, index) => (
                 <MovieCard
                   key={`${movie.id}-${index}`}
+                  id={movie.id}
                   title={movie.title}
                   posterPath={movie.poster_path}
                   rating={movie.vote_average}
                   releaseDate={movie.release_date}
+                  type="movie"
                 />
               ))}
             </div>

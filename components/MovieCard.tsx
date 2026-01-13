@@ -1,13 +1,15 @@
-import React from 'react';
+import Link from 'next/link';
 
 interface MovieCardProps {
+  id: number;
   title: string;
   posterPath: string;
   rating: number;
   releaseDate: string;
+  type?: 'movie' | 'tv';
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ title, posterPath, rating, releaseDate }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ id, title, posterPath, rating, releaseDate, type = 'movie' }) => {
   const imageUrl = posterPath 
     ? `https://image.tmdb.org/t/p/w500${posterPath}`
     : 'https://via.placeholder.com/500x750?text=No+Image';
@@ -25,7 +27,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, posterPath, rating, releas
   const color = getRatingColor(ratingPercentage);
 
   return (
-    <div className="movie-card animate-fade-in">
+    <Link href={`/${type}/${id}`} className="movie-card animate-fade-in" style={{ textDecoration: 'none' }}>
       <div className="poster-wrapper">
         <img src={imageUrl} alt={title} className="movie-poster" loading="lazy" />
         
@@ -54,7 +56,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, posterPath, rating, releas
           {releaseDate ? new Date(releaseDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Jan 01, 2024'}
         </p>
       </div>
-    </div>
+    </Link>
   );
 };
 

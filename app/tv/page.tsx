@@ -99,10 +99,12 @@ export default function TVPage() {
               {shows.map((show, index) => (
                 <MovieCard
                   key={`${show.id}-${index}`}
+                  id={show.id}
                   title={show.name}
                   posterPath={show.poster_path}
                   rating={show.vote_average}
                   releaseDate={show.first_air_date}
+                  type="tv"
                 />
               ))}
             </div>
