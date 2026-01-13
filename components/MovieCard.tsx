@@ -14,31 +14,45 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, posterPath, rating, releas
 
   // Calculate percentage for circular progress
   const ratingPercentage = Math.round(rating * 10);
-  const strokeDashoffset = 100 - ratingPercentage;
+  
+  // Dynamic color based on rating (TMDb style)
+  const getRatingColor = (score: number) => {
+    if (score >= 70) return "#21d07a"; // Green
+    if (score >= 40) return "#d2d531"; // Yellow/Lime
+    return "#db2360"; // Red
+  };
+
+  const color = getRatingColor(ratingPercentage);
 
   return (
     <div className="movie-card animate-fade-in">
       <div className="poster-wrapper">
         <img src={imageUrl} alt={title} className="movie-poster" loading="lazy" />
         
-        {/* Rating Circle - Inspired by Image 1 */}
+        {/* Rating Circle - Enhanced Visibility */}
         <div className="rating-circle-container">
           <svg viewBox="0 0 36 36" className="circular-chart">
             <path className="circle-bg"
               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
             />
             <path className="circle"
+              stroke={color}
               strokeDasharray={`${ratingPercentage}, 100`}
               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
             />
           </svg>
-          <span className="rating-text">{ratingPercentage}%</span>
+          <div className="rating-text-wrapper">
+            <span className="rating-text">{ratingPercentage}</span>
+            <span className="rating-percent">%</span>
+          </div>
         </div>
       </div>
       
       <div className="movie-content">
         <h3 className="movie-title">{title}</h3>
-        <p className="movie-date">{releaseDate ? new Date(releaseDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown Release'}</p>
+        <p className="movie-date">
+          {releaseDate ? new Date(releaseDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Jan 01, 2024'}
+        </p>
       </div>
     </div>
   );

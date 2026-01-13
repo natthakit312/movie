@@ -19,12 +19,12 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   
   // Replace with your TMDb API Key
-  const API_KEY = "PLEASE_REPLACE_WITH_YOUR_TMDB_API_KEY"; 
+  const API_KEY = "233f3a5d8f8cb3c344512e12e10a9be0"; 
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        if (API_KEY === "PLEASE_REPLACE_WITH_YOUR_TMDB_API_KEY") {
+        if (!API_KEY || API_KEY.length < 10) {
           console.warn("Using mock data. Please provide a real TMDb API key.");
           setMovies(MOCK_MOVIES);
           setLoading(false);

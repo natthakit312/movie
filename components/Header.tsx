@@ -5,7 +5,9 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-container">
-        <div className="logo">CINEFLIX</div>
+        <div className="logo" style={{ background: 'linear-gradient(to right, #90cea1, #01b4e4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          THE MOVIE DB
+        </div>
         <nav>
           <ul className="nav-links">
             <li><a href="#">Home</a></li>
