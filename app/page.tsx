@@ -1,65 +1,84 @@
-import Image from "next/image";
+"use client"
+import { useEffect, useState } from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import MovieCard from "@/components/MovieCard";
+
+// Mock data in case API key is missing or fails
+const MOCK_MOVIES = [
+  { id: 1, title: "Perfect Days", poster_path: "/6v65vK6tGzIDxNRd9yQ5zW5Z4jN.jpg", vote_average: 8.2, release_date: "2023-11-10" },
+  { id: 2, title: "Close", poster_path: "/6m6p6oBvG6M6O5yN4p6m7k8jL9i.jpg", vote_average: 7.9, release_date: "2022-11-01" },
+  { id: 3, title: "Portrait of a Lady on Fire", poster_path: "/2L6965vK6tGzIDxNRd9yQ5zW5Z4jN.jpg", vote_average: 8.3, release_date: "2019-09-18" },
+  { id: 4, title: "Aftersun", poster_path: "/7v65vK6tGzIDxNRd9yQ5zW5Z4jN.jpg", vote_average: 7.9, release_date: "2022-10-21" },
+  { id: 5, title: "In the Mood for Love", poster_path: "/8v65vK6tGzIDxNRd9yQ5zW5Z4jN.jpg", vote_average: 8.1, release_date: "2000-09-29" },
+  { id: 6, title: "Stranger Things", poster_path: "/49WJfev0mUIPxw9PBv9j69YgI3S.jpg", vote_average: 8.6, release_date: "2016-07-15" },
+];
 
 export default function Home() {
+  const [movies, setMovies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Replace with your TMDb API Key
+  const API_KEY = "PLEASE_REPLACE_WITH_YOUR_TMDB_API_KEY"; 
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        if (API_KEY === "PLEASE_REPLACE_WITH_YOUR_TMDB_API_KEY") {
+          console.warn("Using mock data. Please provide a real TMDb API key.");
+          setMovies(MOCK_MOVIES);
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
+        );
+        const data = await response.json();
+        
+        if (data.results) {
+          setMovies(data.results);
+        } else {
+          setMovies(MOCK_MOVIES);
+        }
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+        setMovies(MOCK_MOVIES);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="min-h-screen">
+      <Header />
+      
+      <main className="movie-section">
+        <h2 className="section-title">Trending Now</h2>
+        
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <p>Loading amazing movies...</p>
+          </div>
+        ) : (
+          <div className="movie-grid">
+            {movies.map((movie) => (
+              <MovieCard
+                key={movie.id}
+                title={movie.title || movie.name}
+                posterPath={movie.poster_path}
+                rating={movie.vote_average}
+                releaseDate={movie.release_date || movie.first_air_date}
+              />
+            ))}
+          </div>
+        )}
       </main>
+
+      <Footer />
     </div>
   );
 }
