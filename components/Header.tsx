@@ -1,5 +1,6 @@
 "use client"
 import React from 'react';
+import Link from 'next/link';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -16,14 +17,14 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   return (
     <header className="header">
       <div className="header-container">
-        <div className="logo" style={{ background: 'linear-gradient(to right, #90cea1, #01b4e4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', cursor: 'pointer' }} onClick={() => { setQuery(""); onSearch(""); }}>
+        <Link href="/" className="logo" style={{ background: 'linear-gradient(to right, #90cea1, #01b4e4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', cursor: 'pointer', textDecoration: 'none' }} onClick={() => { setQuery(""); onSearch(""); }}>
           THE MOVIE DB
-        </div>
+        </Link>
         <nav>
           <ul className="nav-links">
-            <li><a href="#" onClick={(e) => { e.preventDefault(); onSearch(""); setQuery(""); }}>Home</a></li>
-            <li><a href="#">Movies</a></li>
-            <li><a href="#">TV Shows</a></li>
+            <li><Link href="/">Home</Link></li>
+            <li><Link href="/movies">Movies</Link></li>
+            <li><Link href="/tv">TV Shows</Link></li>
           </ul>
         </nav>
         <form className="search-container" onSubmit={handleSubmit}>
