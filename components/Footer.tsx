@@ -5,7 +5,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-brand">
-          <div className="logo">CINEFLIX</div>
+          <div className="logo">THE MOVIE DB</div>
           <p>Your ultimate destination for the latest movies and TV shows from around the world. Powered by TMDb.</p>
         </div>
         <div className="footer-links">
